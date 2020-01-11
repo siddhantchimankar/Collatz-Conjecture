@@ -12,6 +12,7 @@ The conjecture is named after Lothar Collatz, who introduced the idea in 1937, t
 
 **Resources** : 
 
+https://en.wikipedia.org/wiki/Collatz_conjecture<br />
 https://www.youtube.com/watch?v=5mFpVDpKX70<br />
 https://www.youtube.com/watch?v=LqKpkdRRLZw<br />
 https://www.youtube.com/watch?v=K0yMyUn--0s
