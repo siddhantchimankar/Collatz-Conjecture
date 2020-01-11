@@ -1,0 +1,999 @@
++*In[32]:*+
+[source, ipython3]
+----
+import numpy
+import pandas as pd
+import math
+import random
+from operator import truediv
+import matplotlib.pyplot as plt
+import matplotlib.pylab as pylab
+import seaborn as sns
+
+%matplotlib inline
+from matplotlib import rcParams
+rcParams['figure.figsize'] = 8,8
+import warnings
+warnings.filterwarnings('ignore')
+----
+
+
++*In[2]:*+
+[source, ipython3]
+----
+sequenceTree = []
+def collatz(num):
+    global sequenceTree
+    
+    if(num == 1):
+        
+        sequenceTree.append(num)
+        seq = sequenceTree
+        sequenceTree = []
+        return seq
+    
+    if(num%2 == 0):
+        sequenceTree.append(num)
+        num = num/2
+        
+        return (collatz(num))
+    else:
+        sequenceTree.append(num)
+        num = 3*num + 1
+        
+        return (collatz(num))
+    
+    
+    
+collatz(8)
+
+----
+
+
++*Out[2]:*+
+----[8, 4.0, 2.0, 1.0]----
+
+
++*In[3]:*+
+[source, ipython3]
+----
+collatz(8)
+----
+
+
++*Out[3]:*+
+----[8, 4.0, 2.0, 1.0]----
+
+
++*In[4]:*+
+[source, ipython3]
+----
+
+def lengthOfTrees(n,length=0):
+    
+    if(n == 1):
+        length = length + 1
+        return length
+    
+    if(n%2 == 0):
+        n = n/2
+        length = length + 1
+        return (lengthOfTrees(n,length))
+    else:
+        n = 3*n + 1
+        length = length + 1
+        return (lengthOfTrees(n,length))
+    
+lengthOfTrees(9)
+----
+
+
++*Out[4]:*+
+----20----
+
+
++*In[5]:*+
+[source, ipython3]
+----
+
+
+def generateTrees(size, heightArray = []):
+    heightArray = []
+    for i in range(1,size+1):
+        heightArray.append(lengthOfTrees(i))
+        
+    return heightArray
+        
+
+generateTrees(5)
+----
+
+
++*Out[5]:*+
+----[1, 2, 8, 3, 6]----
+
+
++*In[6]:*+
+[source, ipython3]
+----
+def index(n,indexArray = []):
+    indexArray = []
+    for i in range(1,n+1):
+        indexArray.append(i)
+    
+    return indexArray
+    
+index(5)
+----
+
+
++*Out[6]:*+
+----[1, 2, 3, 4, 5]----
+
+
++*In[7]:*+
+[source, ipython3]
+----
+index(5)
+----
+
+
++*Out[7]:*+
+----[1, 2, 3, 4, 5]----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+
+    
+
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[8]:*+
+[source, ipython3]
+----
+#count for how many numbers are greater than the number !
+#count for how many numbers are smaller than the number !
+#Ratio of the above two !
+#largest number in the tree !
+#Number of even and odd numbers in the tree !
+#Number of primes in the Tree !
+#Number of square numbers in the Tree !
+
+----
+
+
++*In[9]:*+
+[source, ipython3]
+----
+def greaterThan(n):
+    count = 0
+    greaterArray = []
+    for i in range(1,n+1):
+        for j in collatz(i):
+            if(i < j):
+                count = count + 1
+        greaterArray.append(count)
+        count = 0
+    return greaterArray
+    
+
+greaterThan(10)
+----
+
+
++*Out[9]:*+
+----[0, 0, 5, 0, 2, 3, 12, 0, 13, 1]----
+
+
++*In[10]:*+
+[source, ipython3]
+----
+def smallerThan(n):
+    count = 0
+    smallerArray = []
+    for i in range(1,n+1):
+        for j in collatz(i):
+            if(i > j):
+                count = count + 1
+        smallerArray.append(count)
+        count = 0
+    return smallerArray
+    
+
+smallerThan(5)    
+----
+
+
++*Out[10]:*+
+----[0, 1, 2, 2, 3]----
+
+
++*In[11]:*+
+[source, ipython3]
+----
+def largestNum(n):
+    num = 0
+    largeArray = []
+    for i in range(1,n+1):
+        for j in collatz(i):
+            if(j > num):
+                num = j
+        largeArray.append(num)
+        num = 0
+    return largeArray
+
+type(largestNum(5)[0])
+----
+
+
++*Out[11]:*+
+----int----
+
+
++*In[12]:*+
+[source, ipython3]
+----
+def evenNums(n):
+    num = 0
+    evenArray = []
+    for i in range(1,n+1):
+        for j in collatz(i):
+            if(j%2 == 0):
+                num = num + 1
+        evenArray.append(num)
+        num = 0
+    return evenArray
+
+evenNums(5)
+    
+----
+
+
++*Out[12]:*+
+----[0, 1, 5, 2, 4]----
+
+
++*In[13]:*+
+[source, ipython3]
+----
+def oddNums(n):
+    num = 0
+    oddArray = []
+    for i in range(1,n+1):
+        for j in collatz(i):
+            if(j%2 == 1):
+                num = num + 1
+        oddArray.append(num)
+        num = 0
+    return oddArray
+
+oddNums(5)
+----
+
+
++*Out[13]:*+
+----[1, 1, 3, 1, 2]----
+
+
++*In[14]:*+
+[source, ipython3]
+----
+def isPrime(n):
+    t = 0
+    if(n == 1):
+        return False
+    for i in range(2,math.ceil(math.sqrt(n+1))):
+        if(n%i == 0 and n > 1):
+            return False
+    return True
+        
+isPrime(17)
+----
+
+
++*Out[14]:*+
+----True----
+
+
++*In[15]:*+
+[source, ipython3]
+----
+def primeNums(n):
+    num = 0
+    primeArray = []
+    for i in range(1,n+1):
+        for j in collatz(i):
+            if(isPrime(j) == True):
+                num = num + 1
+        primeArray.append(num)
+        num = 0
+    return primeArray
+
+primeNums(7)
+----
+
+
++*Out[15]:*+
+----[0, 1, 3, 1, 2, 3, 6]----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+
+----
+
+
++*In[16]:*+
+[source, ipython3]
+----
+def isSquare(n):
+    sqrt = math.sqrt(n)
+    return (sqrt - int(sqrt)) == 0
+isSquare(5)
+----
+
+
++*Out[16]:*+
+----False----
+
+
++*In[17]:*+
+[source, ipython3]
+----
+def squareNums(n):
+    num = 0
+    squareArray = []
+    for i in range(1,n+1):
+        for j in collatz(i):
+            if(isSquare(j) == True):
+                num = num + 1
+        squareArray.append(num)
+        num = 0
+    return squareArray
+
+squareNums(7)
+----
+
+
++*Out[17]:*+
+----[1, 1, 3, 2, 3, 3, 3]----
+
+
++*In[38]:*+
+[source, ipython3]
+----
+def parity(n):
+    parityArray = []
+    for i in range(1,n+1):
+        if(i%2 == 0):
+            parityArray.append('0')
+        else:
+            parityArray.append('1')
+    return parityArray
+parity(5)
+----
+
+
++*Out[38]:*+
+----['1', '0', '1', '0', '1']----
+
+
++*In[19]:*+
+[source, ipython3]
+----
+def prime(n):
+    primeArray = []
+    for i in range(1,n+1):
+        if(isPrime(i) == True):
+            primeArray.append(1)
+        else:
+            primeArray.append(0)
+    return primeArray
+prime(5)
+----
+
+
++*Out[19]:*+
+----[0, 1, 1, 0, 1]----
+
+
++*In[20]:*+
+[source, ipython3]
+----
+def square(n):
+    squareArray = []
+    for i in range(1,n+1):
+        if(isSquare(i) == True):
+            squareArray.append(1)
+        else:
+            squareArray.append(0)
+    return squareArray
+square(5)
+----
+
+
++*Out[20]:*+
+----[1, 0, 0, 1, 0]----
+
+
++*In[118]:*+
+[source, ipython3]
+----
+df = []
+def createData(ran,a = [],b = []):
+    a = index(ran)
+    b = generateTrees(ran)
+    c = greaterThan(ran)
+    d = smallerThan(ran)
+    e = map(truediv, b, a)
+    f = largestNum(ran)
+    g = evenNums(ran)
+    h = oddNums(ran)
+    i = primeNums(ran)
+    j = squareNums(ran)
+    k = parity(ran)
+    l = prime(ran)
+    m = square(ran)
+    data = {'Number' : a, 'Height' : b, 'GreaterNums' : c, 'SmallerNums' : d, 'RatioOfGreater&Smaller' : e, 'LargestNum' : f, 'EvenNumbers' : g, 'OddNumbers' : h, 'PrimeNumbers' : i, 'SquareNumbers' : j, 'Parity' : k, 'Prime' : l, 'Square' : m}
+    global df
+    df = pd.DataFrame(data) 
+    df.Parity = df.Parity.astype('category')
+    df.Prime = df.Prime.astype('category')
+    df.Square = df.Square.astype('category')
+
+    return(df)
+
+
+----
+
+
++*In[119]:*+
+[source, ipython3]
+----
+createData(10000)
+----
+
+
++*Out[119]:*+
+----
+[cols=",,,,,,,,,,,,,",options="header",]
+|=======================================================================
+| |Number |Height |GreaterNums |SmallerNums |RatioOfGreater&Smaller
+|LargestNum |EvenNumbers |OddNumbers |PrimeNumbers |SquareNumbers
+|Parity |Prime |Square
+|0 |1 |1 |0 |0 |1.000000 |1.0 |0 |1 |0 |1 |1 |0 |1
+
+|1 |2 |2 |0 |1 |1.000000 |2.0 |1 |1 |1 |1 |0 |1 |0
+
+|2 |3 |8 |5 |2 |2.666667 |16.0 |5 |3 |3 |3 |1 |1 |0
+
+|3 |4 |3 |0 |2 |0.750000 |4.0 |2 |1 |1 |2 |0 |0 |1
+
+|4 |5 |6 |2 |3 |1.200000 |16.0 |4 |2 |2 |3 |1 |1 |0
+
+|... |... |... |... |... |... |... |... |... |... |... |... |... |...
+
+|9995 |9996 |180 |96 |83 |0.018007 |250504.0 |115 |65 |28 |3 |0 |0 |0
+
+|9996 |9997 |180 |98 |81 |0.018005 |250504.0 |115 |65 |28 |3 |1 |0 |0
+
+|9997 |9998 |92 |7 |84 |0.009202 |33748.0 |61 |31 |18 |3 |0 |0 |0
+
+|9998 |9999 |92 |10 |81 |0.009201 |101248.0 |61 |31 |17 |3 |1 |0 |0
+
+|9999 |10000 |30 |0 |29 |0.003000 |10000.0 |23 |7 |5 |6 |0 |0 |1
+|=======================================================================
+
+10000 rows × 13 columns
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+#Parity, Prime and Square are assigned 1 if they satisfy the title property otherwise 0
+----
+
+
++*In[520]:*+
+[source, ipython3]
+----
+f, axes = plt.subplots(2, 2, figsize=(12, 15))
+sns.despine(left=True)
+
+sns.set_style('whitegrid')
+sns.barplot(data = df, x = df.Square, y = df.Height, hue = df.Parity, ax=axes[0, 0])
+
+sns.set_style('whitegrid')
+sns.barplot(data = df, x = df.Parity, y = df['LargestNum'], hue = df.Square, ax=axes[1, 0])
+
+sns.set_style('whitegrid')
+sns.barplot(data = df, x = df.Parity, y = df['RatioOfGreater&Smaller'], hue = df.Square, ax=axes[0,1])
+
+sns.set_style('whitegrid')
+sns.barplot(data = df, x = df.Parity, y = df.Height, hue = df.Prime, ax=axes[1, 1])
+
+plt.show()
+----
+
+
++*Out[520]:*+
+----
+![png](output_26_0.png)
+----
+
+
++*In[521]:*+
+[source, ipython3]
+----
+#From this dashboard we can observe :
+#In the first graph we clearly see that Odd parity generates higher Collatz sequence trees
+#Also we find that non-Square numbers generate higher Collatz trees than Square numbers
+#From graph 2 we see that Square numbers have a larger proportion of Greater numbers in their Collatz trees than Non-Square numbers.
+#And also it shows that Odd numbers generate longer Collatz trees which is quite intuitive
+#Next graph shows us strikingly that Odd numbers generate larger magnitudes of numbersin their trees which is again quite intuitive
+#The last graph simply shows that Prime numbers gennerate longer trees compared to composite numbers
+----
+
+
++*In[467]:*+
+[source, ipython3]
+----
+f, axes = plt.subplots(1, 2, figsize=(15, 7))
+sns.despine(left=True)
+
+sns.set_style('whitegrid')
+sns.distplot(a = df.Height, bins = 20, ax = axes[1])
+
+sns.set_style('whitegrid')
+sns.distplot(a = df['PrimeNumbers'], bins = 20, ax = axes[0])
+
+plt.show()
+
+----
+
+
++*Out[467]:*+
+----
+![png](output_28_0.png)
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+#Both these distplots show the numbers of Prime numbers and Tree heights across the dataframe. It is surprising to see that they
+#resemble each other in their form and shape and create this sort of camel-ish normal distribution
+----
+
+
++*In[371]:*+
+[source, ipython3]
+----
+sns.scatterplot(data = df, x = df.Number, y = df.Height, palette = 'seismic', hue = df.Prime, s = 10, linewidth = 0.25)
+plt.show()
+----
+
+
++*Out[371]:*+
+----
+![png](output_30_0.png)
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+#Possibly the most important graph which depicts how the heights of the numbers in our dataframe look like according to the numbers.
+#The colors show the distinguishment between Primes and composites and shows that primes are uniformly and randomly present between the numbers.
+----
+
+
++*In[469]:*+
+[source, ipython3]
+----
+sns.scatterplot(data = df, x = df.Height, y = df['RatioOfGreater&Smaller'], palette = 'seismic', hue = df.Parity)
+plt.show()
+----
+
+
++*Out[469]:*+
+----
+![png](output_32_0.png)
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+#This scatterplot shows that around Heights = 100 and 0 the ratio of Greater Numbers in tree sequences is much higher than at around other heights
+----
+
+
++*In[500]:*+
+[source, ipython3]
+----
+sns.set_style('whitegrid')
+
+sns.scatterplot(data = df, x = df.Number, y = df['LargestNum'], hue = df.Prime)
+plt.show()
+----
+
+
++*Out[500]:*+
+----
+![png](output_34_0.png)
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+#This scatterplot demonstartes that most numbers have smaller values as their largest number in their tree sequences but as you move 
+#further away to larger numbers some Largest Numbers can be very laarge as shown by the single point at the top right corner of this graph
+----
+
+
++*In[470]:*+
+[source, ipython3]
+----
+sns.scatterplot(data = df, x = df.PrimeNumbers, y = df['RatioOfGreater&Smaller'], palette = 'seismic', hue = df.Parity)
+plt.show()
+----
+
+
++*Out[470]:*+
+----
+![png](output_36_0.png)
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+#This scatterplot shows that around Number of Prime Numbers in sequence tree = 25 the ratio of Greater Numbers in tree 
+#sequences is much higher than at around other heights
+----
+
+
++*In[507]:*+
+[source, ipython3]
+----
+f, axes = plt.subplots(1, 2, figsize=(15, 7))
+sns.despine(left=True)
+
+sns.lineplot(data = df, x = df.PrimeNumbers, y = df['RatioOfGreater&Smaller'], palette = 'inferno_r', hue = df.Prime, ax = axes[0])
+
+sns.lineplot(data = df, x = df.PrimeNumbers, y = df['RatioOfGreater&Smaller'], palette = 'inferno_r', hue = df.Square, ax = axes[1])
+
+plt.show()
+----
+
+
++*Out[507]:*+
+----
+![png](output_38_0.png)
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+#Inference from lineplot 2 : Square numbers with 15-20 primes in their Collatz trees have the most Greater Numbers in their tree sequences
+----
+
+
++*In[509]:*+
+[source, ipython3]
+----
+f, axes = plt.subplots(1, 2, figsize=(15, 7))
+sns.despine(left=True)
+
+sns.lineplot(data = df, y = df.LargestNum, x = df.PrimeNumbers, palette = 'seismic', hue = df.Square, ax = axes[0])
+
+sns.lineplot(data = df, y = df.LargestNum, x = df.PrimeNumbers, palette = 'seismic', hue = df.Parity, ax = axes[1])
+
+plt.show()
+----
+
+
++*Out[509]:*+
+----
+![png](output_40_0.png)
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+#Inference from lineplot 1 : Square numbers with 30-40 primes in their Collatz trees have the Largest Numbers in their tree sequences
+#Inference from lineplot 2 : Odd numbers with 20-40 primes in their Collatz trees have the Largest Numbers in their tree sequences
+----
+
+
++*In[510]:*+
+[source, ipython3]
+----
+sns.lineplot(data = df, x = df.Height, y = df.SquareNumbers, palette = 'seismic', hue = df.Square)
+plt.show()
+----
+
+
++*Out[510]:*+
+----
+![png](output_42_0.png)
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+#Another striking lineplot which shows how Height of a Collatz tree correlates to the number of Square numbers present in it.
+#It also shows that Square numbers generaate higher Collatz trees which is an established fact by now
+----
+
+
++*In[511]:*+
+[source, ipython3]
+----
+sns.kdeplot(df.Number, df.Height , cmap="Reds", shade=True, shade_lowest=False)
+sns.kdeplot(df.Number, df.Height , cmap="Reds")
+
+plt.show()
+----
+
+
++*Out[511]:*+
+----
+![png](output_44_0.png)
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+#Thsi is a heatmp showing the relationship between  number aand the height of the collatz tree that it generates
+----
+
+
++*In[512]:*+
+[source, ipython3]
+----
+sns.kdeplot(df.SquareNumbers, df.Height , cmap="Reds",height = 9, shade=True, shade_lowest=False)
+sns.kdeplot(df.SquareNumbers, df.Height , cmap="copper",height = 9, shade=False, linewidth = 0.1)
+
+
+plt.show()
+----
+
+
++*Out[512]:*+
+----
+![png](output_46_0.png)
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+#Very interesting heatmap that shows that certain number of Square Numbers in a collatz sequence affect the different heights of the sequence
+----
+
+
++*In[148]:*+
+[source, ipython3]
+----
+sns.set_style('whitegrid')
+sns.jointplot(data = df, x = df.Height, y = df.PrimeNumbers, kind = 'hex',height = 9, space = 0, color="#4CB391")
+plt.show()
+----
+
+
++*Out[148]:*+
+----
+![png](output_48_0.png)
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+#A hex-jointplot which correlates the heights of collatz trees with the number of Prime numbers in them. It is almost linear.
+----
+
+
++*In[29]:*+
+[source, ipython3]
+----
+for i in df['RatioOfGreater&Smaller']:
+    if(i > 4):
+        print(i)
+----
+
+
++*Out[29]:*+
+----
+4.148148148148148
+----
+
+
++*In[30]:*+
+[source, ipython3]
+----
+df[df['RatioOfGreater&Smaller'] > 4 ]
+----
+
+
++*Out[30]:*+
+----
+[cols=",,,,,,,,,,,,,",options="header",]
+|=======================================================================
+| |Number |Height |GreaterNums |SmallerNums |RatioOfGreater&Smaller
+|LargestNum |EvenNumbers |OddNumbers |PrimeNumbers |SquareNumbers
+|Parity |Prime |Square
+|26 |27 |112 |102 |9 |4.148148 |9232.0 |70 |42 |25 |5 |Odd |0 |0
+|=======================================================================
+----
+
+
++*In[522]:*+
+[source, ipython3]
+----
+#27 is the number which has the most unequal distribution of Greater numbers to smaller numbers in its sequence tree
+#Let us look at its Collatz Tree
+
+collatz(27)
+
+#As we can see most of the numbers are very large with respect to 27. Most are 3 digit numbers and a few 4 digit numbers.
+#It is cool to see that 27 being such a small number generates this effect whearas as the numbers get larger we see rapid
+#decrease in this trend as the ratio falls fast towards 0. This can be explained by the fact that their are fewer and fewer
+#prime numbers as we go up and this scarceness in prime numbers affects the ratio of the trees.
+----
+
+
++*Out[522]:*+
+----[27,
+ 82,
+ 41.0,
+ 124.0,
+ 62.0,
+ 31.0,
+ 94.0,
+ 47.0,
+ 142.0,
+ 71.0,
+ 214.0,
+ 107.0,
+ 322.0,
+ 161.0,
+ 484.0,
+ 242.0,
+ 121.0,
+ 364.0,
+ 182.0,
+ 91.0,
+ 274.0,
+ 137.0,
+ 412.0,
+ 206.0,
+ 103.0,
+ 310.0,
+ 155.0,
+ 466.0,
+ 233.0,
+ 700.0,
+ 350.0,
+ 175.0,
+ 526.0,
+ 263.0,
+ 790.0,
+ 395.0,
+ 1186.0,
+ 593.0,
+ 1780.0,
+ 890.0,
+ 445.0,
+ 1336.0,
+ 668.0,
+ 334.0,
+ 167.0,
+ 502.0,
+ 251.0,
+ 754.0,
+ 377.0,
+ 1132.0,
+ 566.0,
+ 283.0,
+ 850.0,
+ 425.0,
+ 1276.0,
+ 638.0,
+ 319.0,
+ 958.0,
+ 479.0,
+ 1438.0,
+ 719.0,
+ 2158.0,
+ 1079.0,
+ 3238.0,
+ 1619.0,
+ 4858.0,
+ 2429.0,
+ 7288.0,
+ 3644.0,
+ 1822.0,
+ 911.0,
+ 2734.0,
+ 1367.0,
+ 4102.0,
+ 2051.0,
+ 6154.0,
+ 3077.0,
+ 9232.0,
+ 4616.0,
+ 2308.0,
+ 1154.0,
+ 577.0,
+ 1732.0,
+ 866.0,
+ 433.0,
+ 1300.0,
+ 650.0,
+ 325.0,
+ 976.0,
+ 488.0,
+ 244.0,
+ 122.0,
+ 61.0,
+ 184.0,
+ 92.0,
+ 46.0,
+ 23.0,
+ 70.0,
+ 35.0,
+ 106.0,
+ 53.0,
+ 160.0,
+ 80.0,
+ 40.0,
+ 20.0,
+ 10.0,
+ 5.0,
+ 16.0,
+ 8.0,
+ 4.0,
+ 2.0,
+ 1.0]----
+
+
++*In[517]:*+
+[source, ipython3]
+----
+sns.clustermap(df.corr(), cmap = 'summer', linewidth = 1, linecolor = 'black', figsize=(7,7))
+plt.show()
+----
+
+
++*Out[517]:*+
+----
+![png](output_53_0.png)
+----
+
+
++*In[ ]:*+
+[source, ipython3]
+----
+#A final clustermap showing all the correlatiions between different parameters of the dataframe
+----
