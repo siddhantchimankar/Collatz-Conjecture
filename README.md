@@ -2,7 +2,7 @@
 
 **Project** : Analyze the Collatz conjecure by performing visualisations over a 10,000 x 13 self-generated dataframe.
 
-**Language** : Python
+**Language** : Python 3.7
 
 **Description** :
 
